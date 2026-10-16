@@ -1,3 +1,5 @@
+import { demoApi } from "./demoApi";
+
 export type Expense = {
   id: number;
   user_id: number;
@@ -60,7 +62,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return body as T;
 }
 
-export const api = {
+const restApi = {
   listExpenses(f: Filters) {
     const q = new URLSearchParams();
     for (const [k, v] of Object.entries(f)) {
@@ -84,3 +86,8 @@ export const api = {
     return request<Category[]>("/categories");
   },
 };
+
+// Сборка для GitHub Pages (VITE_DEMO=1) работает без бэкенда, на данных в браузере.
+export const isDemo = import.meta.env.VITE_DEMO === "1";
+
+export const api: typeof restApi = isDemo ? demoApi : restApi;

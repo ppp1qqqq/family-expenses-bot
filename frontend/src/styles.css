@@ -221,3 +221,26 @@ td:nth-child(5) {
   gap: 8px;
   margin-top: 4px;
 }
+
+.demo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.demo a {
+  color: var(--accent);
+}
+
+.demo button {
+  padding: 4px 10px;
+  font-size: 13px;
+}

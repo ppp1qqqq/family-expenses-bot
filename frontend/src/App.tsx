@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, type Category, type Expense, type ExpenseList, type Filters, type User } from "./api";
+import { api, isDemo, type Category, type Expense, type ExpenseList, type Filters, type User } from "./api";
 import { ExpenseForm } from "./ExpenseForm";
+import { resetDemo } from "./demoApi";
 
 const PAGE_SIZE = 50;
 
@@ -86,6 +87,23 @@ export function App() {
           Добавить трату
         </button>
       </header>
+
+      {isDemo && (
+        <div className="demo">
+          <span>
+            Демо-версия панели с примерами трат. Данные хранятся только в вашем браузере, бот к ней не подключён.{" "}
+            <a href="https://github.com/ppp1qqqq/family-expenses-bot">Код и инструкция по запуску</a>.
+          </span>
+          <button
+            onClick={() => {
+              resetDemo();
+              setFilters({ limit: PAGE_SIZE, offset: 0 });
+            }}
+          >
+            Вернуть исходные данные
+          </button>
+        </div>
+      )}
 
       <section className="filters">
         <label>
