@@ -31,11 +31,28 @@ services:
 
   web:
     build: ./frontend
-    # Панель без авторизации, поэтому доступна только с этой машины.
+    # WEB_USER и WEB_PASSWORD включают пароль на панель, без них она открыта.
+    env_file:
+      - path: .env
+        required: false
+    # Наружу панель выходит только через туннель, сам порт открыт лишь на этой машине.
     ports:
       - "127.0.0.1:${WEB_PORT:-8080}:80"
     depends_on:
       - backend
+    restart: unless-stopped
+
+  # Публичная ссылка на панель через SSH-туннель localhost.run: без аккаунта, нужен только исходящий порт 22.
+  # Запуск: docker compose --profile public up -d; адрес вида https://xxxx.lhr.life появится в логах tunnel.
+  tunnel:
+    image: alpine:3.22
+    command: >-
+      sh -c "apk add --no-cache openssh-client >/dev/null &&
+      exec ssh -T -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 -o ExitOnForwardFailure=yes
+      -R 80:web:80 nokey@localhost.run"
+    depends_on:
+      - web
+    profiles: ["public"]
     restart: unless-stopped
 
 volumes:
